@@ -6,4 +6,4 @@
 - Timer/Counter, Interrupt, ADC, PWM을 이용한 신호등 제어
   
 # GPIO Mapping
-<img width="350" height="350" alt="blinkgpio" src="https://github.com/user-attachments/assets/47be36be-2a26-4cfc-b13c-8139a314a045" />
+<img width="380" height="380" alt="blinkgpio" src="https://github.com/user-attachments/assets/47be36be-2a26-4cfc-b13c-8139a314a045" />

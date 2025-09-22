@@ -18,6 +18,25 @@
 > - plus_bt(PC2) : 버튼(+)
 > - minus_bt(PC3) : 버튼(-)
 
+## Timer/Counter
+- **Peripheral** : TIM4
+- **구현** :
+1. TIM4는 프리스케일러와 주기를 설정하여 정확히 1ms마다 오버플로우 인터럽트를 생성.
+```84MHz 시스템 클럭을 84로 분주(Prescaler=84−1)하여 1MHz의 타이머 클럭을 만들고 Period를 1000으로 설정하여1ms 타이머 인터럽트 생성```
+
+2. HAL_TIM_PeriodElapsedCallback() 함수는 1ms마다 실행.
+
+3. 이 콜백 내부에서 카운터(time4Cnt)가 증가. 이 값이 1000에 도달하면(즉, 1초가 ) 플래그(time4SecFlag)가 설정.
+
+4. 메인 while(1) 루프는 time4SecFlag를 감시. 플래그가 설정되면 1초가 지났음을 알게 되고, 총 경과 시간(time4SecCnt)이 사용자가 정의한 time 변수의 배수인지 확인.
+ ```
+ if(time4SecCnt % time == 0)
+ {
+     // 색상을 R -> G -> B 순서로 변경
+ }
+ ```
+5. 이 메커니즘을 통해 버튼 인터럽트에 의해 조정되는 time 변수로 색상 변경 속도를 제어.
+
 ## PWM
 - **Peripheral** : TIM4
 - **Channel** : TIM_CHANNEL_1~3(R,G,B)
@@ -58,20 +77,3 @@
 
 4. 메인 while(1) 루프는 10ms마다 keyno 플래그를 확인합니다(디바운싱 목적). 버튼 입력이 등록된 경우, 색상 변경 지연을 결정하는 time 변수를 조정한 후 keyno를 0으로 재설정.
 
-## Timer/Counter
-- **Peripheral** : TIM4
-- **구현** :
-1. TIM4는 프리스케일러와 주기를 설정하여 정확히 1ms마다 오버플로우 인터럽트를 생성.
-
-2. HAL_TIM_PeriodElapsedCallback() 함수는 1ms마다 실행.
-
-3. 이 콜백 내부에서 카운터(time4Cnt)가 증가. 이 값이 1000에 도달하면(즉, 1초가 ) 플래그(time4SecFlag)가 설정.
-
-4. 메인 while(1) 루프는 time4SecFlag를 감시. 플래그가 설정되면 1초가 지났음을 알게 되고, 총 경과 시간(time4SecCnt)이 사용자가 정의한 time 변수의 배수인지 확인.
- ```
- if(time4SecCnt % time == 0)
- {
-     // 색상을 R -> G -> B 순서로 변경
- }
- ```
-5. 이 메커니즘을 통해 버튼 인터럽트에 의해 조정되는 time 변수로 색상 변경 속도를 제어.
